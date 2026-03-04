@@ -2,484 +2,501 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>線上計算工具</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  /* ── CSS 變數 ── */
-  :root {
-    --bg:      #f0f2f8;
-    --white:   #ffffff;
-    --c1:      #2f63f0;   /* 藍：貨櫃 */
-    --c1l:     #e8effe;
-    --c2:      #f05a28;   /* 橘：膠片 */
-    --c2l:     #feeee7;
-    --c3:      #0fab72;   /* 綠：成型 */
-    --c3l:     #e3f9f0;
-    --c4:      #9040f0;   /* 紫：機械 */
-    --c4l:     #f2ebfe;
-    --c5:      #0891b2;   /* 青：實用工具 */
-    --c5l:     #e0f7fa;
-    --text:    #111827;
-    --sub:     #6b7a99;
-    --border:  #dde4f2;
-    --nav-h:   56px;        /* 固定導覽列高度 */
-    --safe-b:  env(safe-area-inset-bottom, 0px);
+/* ═══════════════════════════════
+   CSS 變數
+═══════════════════════════════ */
+:root {
+  --bg:      #f0f2f8;
+  --white:   #ffffff;
+  --c1:      #2f63f0; --c1l: #e8effe;
+  --c2:      #f05a28; --c2l: #feeee7;
+  --c3:      #0fab72; --c3l: #e3f9f0;
+  --c4:      #9040f0; --c4l: #f2ebfe;
+  --c5:      #0891b2; --c5l: #e0f7fa;
+  --text:    #111827;
+  --sub:     #6b7a99;
+  --border:  #dde4f2;
+  --nav-h:   60px;
+  --tab-h:   46px;
+  --safe-b:  env(safe-area-inset-bottom, 0px);
+}
+
+/* ═══════════════════════════════
+   RESET & BASE
+═══════════════════════════════ */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ═══════════════════════════════
+   TOP BAR
+═══════════════════════════════ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  height: var(--nav-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(16px, 4vw, 40px);
+  gap: 12px;
+}
+
+.topbar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(22px, 4.5vw, 28px);
+  letter-spacing: 3px;
+  color: var(--c1);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity .2s;
+}
+.topbar-brand:hover { opacity: .7; }
+
+.topbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.topbar-right {
+  font-size: clamp(12px, 2.5vw, 14px);
+  color: var(--sub);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.hero {
+  background: linear-gradient(150deg, #122166 0%, #2348c8 60%, #3b6ef8 100%);
+  padding: clamp(40px, 9vw, 84px) clamp(20px, 6vw, 80px) clamp(44px, 9vw, 92px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: clamp(200px, 44vw, 480px);
+  height: clamp(200px, 44vw, 480px);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  top: -28%; right: -6%;
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: clamp(140px, 28vw, 300px);
+  height: clamp(140px, 28vw, 300px);
+  border-radius: 50%;
+  background: rgba(150,200,255,0.1);
+  bottom: -28%; left: -4%;
+  pointer-events: none;
+}
+
+.hero-kicker {
+  display: inline-block;
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 100px;
+  padding: 5px 18px;
+  font-size: clamp(10px, 2vw, 12px);
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  margin-bottom: clamp(14px, 3vw, 22px);
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 9vw, 96px);
+  letter-spacing: clamp(5px, 2vw, 12px);
+  color: #fff;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+.hero h1 em { font-style: normal; color: #90c3ff; }
+
+.hero-sub {
+  margin-top: clamp(10px, 2vw, 16px);
+  font-size: clamp(11px, 2.2vw, 13px);
+  color: rgba(255,255,255,0.5);
+  letter-spacing: clamp(1.5px, .6vw, 2.5px);
+  line-height: 1.9;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════
+   CATEGORY TAB BAR
+═══════════════════════════════ */
+.cat-nav {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 200;
+  height: var(--tab-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 clamp(8px, 2vw, 20px);
+}
+.cat-nav::-webkit-scrollbar { display: none; }
+
+.cat-tab {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 clamp(14px, 3vw, 24px);
+  height: 100%;
+  font-size: clamp(13px, 2.5vw, 14px);
+  font-weight: 700;
+  color: var(--sub);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+  cursor: pointer;
+}
+
+.cat-tab.t1.active, .cat-tab.t1:hover { color: var(--c1); border-color: var(--c1); }
+.cat-tab.t2.active, .cat-tab.t2:hover { color: var(--c2); border-color: var(--c2); }
+.cat-tab.t3.active, .cat-tab.t3:hover { color: var(--c3); border-color: var(--c3); }
+.cat-tab.t4.active, .cat-tab.t4:hover { color: var(--c4); border-color: var(--c4); }
+.cat-tab.t5.active, .cat-tab.t5:hover { color: var(--c5); border-color: var(--c5); }
+
+/* ═══════════════════════════════
+   SCROLL TARGET OFFSET
+   補償兩層 sticky 高度
+═══════════════════════════════ */
+.section {
+  scroll-margin-top: calc(var(--nav-h) + var(--tab-h) + 12px);
+}
+
+/* ═══════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════ */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 52px)
+           clamp(16px, 4vw, 48px)
+           calc(clamp(32px, 5vw, 64px) + var(--safe-b));
+}
+
+/* ── section ── */
+.section {
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section { animation: fadeUp .4s ease both; }
+.section:nth-child(1) { animation-delay: .05s; }
+.section:nth-child(2) { animation-delay: .11s; }
+.section:nth-child(3) { animation-delay: .17s; }
+.section:nth-child(4) { animation-delay: .23s; }
+.section:nth-child(5) { animation-delay: .29s; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 14px);
+  margin-bottom: clamp(12px, 2vw, 18px);
+  flex-wrap: nowrap;
+}
+
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px clamp(12px, 2vw, 16px);
+  border-radius: 100px;
+  font-size: clamp(12px, 2.4vw, 13px);
+  font-weight: 700;
+  letter-spacing: .5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.s1 .section-pill { background: var(--c1l); color: var(--c1); }
+.s2 .section-pill { background: var(--c2l); color: var(--c2); }
+.s3 .section-pill { background: var(--c3l); color: var(--c3); }
+.s4 .section-pill { background: var(--c4l); color: var(--c4); }
+.s5 .section-pill { background: var(--c5l); color: var(--c5); }
+
+.section-rule { flex: 1; height: 1px; background: var(--border); min-width: 20px; }
+
+.section-count {
+  font-size: 11px;
+  color: var(--sub);
+  font-weight: 600;
+  letter-spacing: .5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════
+   CARD GRID
+   < 480px  → 1 欄
+   480px+   → 2 欄
+   1024px+  → 3 欄
+   1200px+  → 4 欄
+═══════════════════════════════ */
+.card-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(10px, 2vw, 14px);
+}
+
+@media (min-width: 480px) {
+  .card-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .card-list { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1200px) {
+  .card-list { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── CARD ── */
+.card {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: clamp(14px, 2.5vw, 20px);
+  position: relative;
+  overflow: hidden;
+  min-height: 76px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .15s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 左側彩條 */
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 0 3px 3px 0;
+}
+.s1 .card::before { background: var(--c1); }
+.s2 .card::before { background: var(--c2); }
+.s3 .card::before { background: var(--c3); }
+.s4 .card::before { background: var(--c4); }
+.s5 .card::before { background: var(--c5); }
+
+/* 手機 tap 回饋 */
+.card:active {
+  transform: scale(.97);
+  background: #f6f8ff;
+}
+
+/* PC hover（只在可 hover 設備生效） */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: transparent;
   }
+  .s1 .card:hover { box-shadow: 0 10px 28px rgba(47,99,240,.15); }
+  .s2 .card:hover { box-shadow: 0 10px 28px rgba(240,90,40,.15); }
+  .s3 .card:hover { box-shadow: 0 10px 28px rgba(15,171,114,.15); }
+  .s4 .card:hover { box-shadow: 0 10px 28px rgba(144,64,240,.15); }
+  .s5 .card:hover { box-shadow: 0 10px 28px rgba(8,145,178,.15); }
 
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  .s1 .card:hover .card-url { color: var(--c1); }
+  .s2 .card:hover .card-url { color: var(--c2); }
+  .s3 .card:hover .card-url { color: var(--c3); }
+  .s4 .card:hover .card-url { color: var(--c4); }
+  .s5 .card:hover .card-url { color: var(--c5); }
 
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans TC', sans-serif;
-    min-height: 100dvh;           /* dynamic viewport height */
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
+  .card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
+}
 
-  /* ────────────────────────────────────────────
-     TOP NAV
-  ──────────────────────────────────────────── */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 200;
-    height: var(--nav-h);
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-  }
+/* CARD ICON */
+.card-icon {
+  width: clamp(40px, 6vw, 48px);
+  height: clamp(40px, 6vw, 48px);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(18px, 3vw, 22px);
+  flex-shrink: 0;
+  margin-right: clamp(10px, 2vw, 14px);
+  margin-left: 8px;
+}
+.s1 .card-icon { background: var(--c1l); }
+.s2 .card-icon { background: var(--c2l); }
+.s3 .card-icon { background: var(--c3l); }
+.s4 .card-icon { background: var(--c4l); }
+.s5 .card-icon { background: var(--c5l); }
 
-  .topbar-brand {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 3px;
-    color: var(--c1);
-    text-decoration: none;
-  }
+/* CARD BODY */
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
 
-  .topbar-right {
-    font-size: 12px;
-    color: var(--sub);
-    font-weight: 500;
-  }
+.card-num {
+  display: block;
+  font-size: 10px;
+  color: var(--sub);
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
 
-  /* ────────────────────────────────────────────
-     HERO
-  ──────────────────────────────────────────── */
-  .hero {
-    background: linear-gradient(150deg, #122166 0%, #2348c8 60%, #3b6ef8 100%);
-    padding: 44px 20px 52px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
+.card-name {
+  font-size: clamp(13.5px, 2.4vw, 15px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+  /* 手機允許換行，避免文字截斷 */
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    width: 340px; height: 340px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-    top: -120px; right: -80px;
-    pointer-events: none;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(150,200,255,0.1);
-    bottom: -80px; left: -40px;
-    pointer-events: none;
-  }
-
-  .hero-kicker {
-    display: inline-block;
-    background: rgba(255,255,255,0.13);
-    border: 1px solid rgba(255,255,255,0.28);
-    border-radius: 100px;
-    padding: 4px 16px;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    color: rgba(255,255,255,0.8);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    position: relative; z-index: 1;
-  }
-
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(32px, 9vw, 72px);
-    letter-spacing: clamp(4px, 2vw, 8px);
-    color: #fff;
-    line-height: 1;
-    position: relative; z-index: 1;
-  }
-
-  .hero h1 em { font-style: normal; color: #90c3ff; }
-
-  .hero-sub {
-    margin-top: 10px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 2px;
-    line-height: 1.8;
-    position: relative; z-index: 1;
-  }
-
-  /* stats row */
-  .hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    margin-top: 36px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 16px;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    position: relative; z-index: 1;
-  }
-
-  .hstat {
-    flex: 1;
-    padding: 14px 8px;
-    text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.13);
-  }
-  .hstat:last-child { border-right: none; }
-
-  .hstat-num {
-    display: block;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 30px;
-    letter-spacing: 2px;
-    color: #fff;
-    line-height: 1;
-  }
-
-  .hstat-label {
-    display: block;
-    font-size: 9px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 1.5px;
-    margin-top: 4px;
-    text-transform: uppercase;
-  }
-
-  /* ────────────────────────────────────────────
-     CATEGORY NAV TABS（水平捲動分類選項）
-  ──────────────────────────────────────────── */
-  .cat-nav {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 0;
-    padding: 0 8px;
-    position: sticky;
-    top: var(--nav-h);
-    z-index: 100;
-  }
-
-  .cat-nav::-webkit-scrollbar { display: none; }
-
-  .cat-tab {
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    padding: 12px 18px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--sub);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    white-space: nowrap;
-    transition: color 0.2s, border-color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-  }
-
-  .cat-tab.t1.active, .cat-tab.t1:hover { color: var(--c1); border-color: var(--c1); }
-  .cat-tab.t2.active, .cat-tab.t2:hover { color: var(--c2); border-color: var(--c2); }
-  .cat-tab.t3.active, .cat-tab.t3:hover { color: var(--c3); border-color: var(--c3); }
-  .cat-tab.t4.active, .cat-tab.t4:hover { color: var(--c4); border-color: var(--c4); }
-  .cat-tab.t5.active, .cat-tab.t5:hover { color: var(--c5); border-color: var(--c5); }
-
-  /* ────────────────────────────────────────────
-     MAIN CONTENT
-  ──────────────────────────────────────────── */
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 28px 16px calc(28px + var(--safe-b));
-  }
-
-  /* ── section ── */
-  .section {
-    margin-bottom: 40px;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .section-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-  }
-
-  .s1 .section-pill { background: var(--c1l); color: var(--c1); }
-  .s2 .section-pill { background: var(--c2l); color: var(--c2); }
-  .s3 .section-pill { background: var(--c3l); color: var(--c3); }
-  .s4 .section-pill { background: var(--c4l); color: var(--c4); }
-  .s5 .section-pill { background: var(--c5l); color: var(--c5); }
-
-  .section-rule { flex: 1; height: 1px; background: var(--border); }
-
-  .section-count {
-    font-size: 11px;
-    color: var(--sub);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-  }
-
-  /* ── card list（手機：全寬列表；桌機：雙欄 grid）── */
-  .card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .card {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    background: var(--white);
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
-    /* 手機觸碰回饋 */
-    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.2s ease;
-    -webkit-user-select: none;
-    user-select: none;
-    min-height: 72px;
-  }
-
-  /* 左側彩色邊條 */
-  .card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    border-radius: 0 4px 4px 0;
-  }
-
-  .s1 .card::before { background: var(--c1); }
-  .s2 .card::before { background: var(--c2); }
-  .s3 .card::before { background: var(--c3); }
-  .s4 .card::before { background: var(--c4); }
-  .s5 .card::before { background: var(--c5); }
-
-  /* 手機：tap active 回饋 */
-  .card:active {
-    transform: scale(0.98);
-    background: #f8faff;
-  }
-
-  /* 桌機 hover */
-  @media (hover: hover) {
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: transparent;
-    }
-    .s1 .card:hover { box-shadow: 0 10px 28px rgba(47,99,240,0.14); }
-    .s2 .card:hover { box-shadow: 0 10px 28px rgba(240,90,40,0.14); }
-    .s3 .card:hover { box-shadow: 0 10px 28px rgba(15,171,114,0.14); }
-    .s4 .card:hover { box-shadow: 0 10px 28px rgba(144,64,240,0.14); }
-    .s5 .card:hover { box-shadow: 0 10px 28px rgba(8,145,178,0.14); }
-    .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
-  }
-
-  /* 左側圓形 icon 容器 */
-  .card-icon {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-    margin-right: 14px;
-    margin-left: 8px;
-  }
-
-  .s1 .card-icon { background: var(--c1l); }
-  .s2 .card-icon { background: var(--c2l); }
-  .s3 .card-icon { background: var(--c3l); }
-  .s4 .card-icon { background: var(--c4l); }
-  .s5 .card-icon { background: var(--c5l); }
-
-  .card-body { flex: 1; min-width: 0; }
-
-  .card-num {
-    font-size: 9px;
-    color: var(--sub);
-    letter-spacing: 1.5px;
-    display: block;
-    margin-bottom: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
+/* 寬螢幕才截斷 */
+@media (min-width: 480px) {
   .card-name {
-    font-size: 14.5px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
 
-  /* 小螢幕允許換行 */
-  @media (max-width: 360px) {
-    .card-name { white-space: normal; font-size: 14px; }
-  }
+.card-url {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(10px, 1.8vw, 11px);
+  color: var(--sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .2s;
+}
 
-  .card-url {
-    margin-top: 4px;
-    font-size: 11px;
-    color: var(--sub);
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+/* CARD ARROW */
+.card-arrow {
+  font-size: 22px;
+  color: var(--sub);
+  opacity: .4;
+  flex-shrink: 0;
+  margin-left: 10px;
+  transform: translateX(-4px);
+  transition: opacity .2s, transform .2s;
+}
 
+/* 手機箭頭常顯、不做偏移動畫 */
+@media (max-width: 767px) {
   .card-arrow {
-    font-size: 18px;
-    color: var(--sub);
-    opacity: 0.35;
-    flex-shrink: 0;
-    margin-left: 12px;
-    transform: translateX(-4px);
-    transition: opacity 0.2s, transform 0.2s;
+    opacity: .4;
+    transform: none;
+    transition: none;
   }
+}
 
-  /* 手機：箭頭常顯 */
-  @media (max-width: 768px) {
-    .card-arrow { opacity: 0.4; transform: translateX(0); }
-  }
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+footer {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: clamp(22px, 4vw, 36px)
+           clamp(20px, 4vw, 48px)
+           calc(clamp(22px, 4vw, 36px) + var(--safe-b));
+}
 
-  /* ────────────────────────────────────────────
-     桌機雙欄
-  ──────────────────────────────────────────── */
-  @media (min-width: 640px) {
-    .card-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
+.footer-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(14px, 3vw, 18px);
+  letter-spacing: 4px;
+  color: #c4cfe8;
+  margin-bottom: 6px;
+}
 
-    .main { padding: 40px 28px 64px; }
-  }
-
-  @media (min-width: 960px) {
-    .hero { padding: 72px 40px 80px; }
-    .card-list { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  /* ────────────────────────────────────────────
-     FOOTER
-  ──────────────────────────────────────────── */
-  footer {
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    padding: calc(24px + var(--safe-b)) 20px 24px;
-    text-align: center;
-  }
-
-  .footer-brand {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    letter-spacing: 4px;
-    color: #c5d0e8;
-    margin-bottom: 6px;
-  }
-
-  footer p {
-    font-size: 11px;
-    color: var(--sub);
-    letter-spacing: 1px;
-  }
-
-  /* ────────────────────────────────────────────
-     ANIMATION
-  ──────────────────────────────────────────── */
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(20px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-
-  .section {
-    animation: fadeUp 0.45s ease both;
-  }
-  .section:nth-child(1) { animation-delay: 0.05s; }
-  .section:nth-child(2) { animation-delay: 0.12s; }
-  .section:nth-child(3) { animation-delay: 0.19s; }
-  .section:nth-child(4) { animation-delay: 0.26s; }
-  .section:nth-child(5) { animation-delay: 0.33s; }
+footer p {
+  font-size: clamp(10px, 2vw, 11px);
+  color: var(--sub);
+  letter-spacing: 1px;
+}
 </style>
 </head>
 <body>
 
-<!-- ── TOP BAR ── -->
+<!-- TOP BAR -->
 <div class="topbar">
   <a class="topbar-brand" href="https://shinpak.com" target="_blank">SHINPAK</a>
+  <div class="topbar-divider"></div>
   <div class="topbar-right">線上計算工具</div>
 </div>
 
-<!-- ── HERO ── -->
+<!-- HERO -->
 <div class="hero">
   <div class="hero-kicker">Industrial Calculation Platform</div>
   <h1>線上<em>計算</em>工具</h1>
   <p class="hero-sub">工業生產效率計算平台<br>INDUSTRIAL CALCULATION PLATFORM</p>
-
 </div>
 
-<!-- ── 分類 TAB 列 ── -->
-<nav class="cat-nav">
+<!-- CATEGORY TABS -->
+<nav class="cat-nav" aria-label="工具類別">
   <a class="cat-tab t1 active" href="#s1">📦 貨櫃</a>
   <a class="cat-tab t2" href="#s2">🎞 膠片</a>
   <a class="cat-tab t3" href="#s3">⚙️ 成型</a>
@@ -487,11 +504,11 @@
   <a class="cat-tab t5" href="#s5">🌐 實用</a>
 </nav>
 
-<!-- ── MAIN ── -->
-<div class="main">
+<!-- MAIN -->
+<main class="main">
 
-  <!-- S1：貨櫃計算工具 -->
-  <div class="section s1" id="s1">
+  <!-- S1 貨櫃計算工具 -->
+  <section class="section s1" id="s1">
     <div class="section-header">
       <div class="section-pill">📦 貨櫃計算工具</div>
       <div class="section-rule"></div>
@@ -499,31 +516,31 @@
     </div>
     <div class="card-list">
 
-      <a href="https://lanone100.github.io/containerall/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/containerall/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🚢</div>
         <div class="card-body">
           <span class="card-num">NO.001</span>
           <div class="card-name">多箱型貨櫃裝載計算系統</div>
           <span class="card-url">lanone100.github.io/containerall</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/containerone/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/containerone/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📦</div>
         <div class="card-body">
           <span class="card-num">NO.002</span>
           <div class="card-name">成品箱裝入貨櫃計算表</div>
           <span class="card-url">lanone100.github.io/containerone</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
     </div>
-  </div>
+  </section>
 
-  <!-- S2：膠片材料工具 -->
-  <div class="section s2" id="s2">
+  <!-- S2 膠片材料工具 -->
+  <section class="section s2" id="s2">
     <div class="section-header">
       <div class="section-pill">🎞 膠片材料工具</div>
       <div class="section-rule"></div>
@@ -531,51 +548,51 @@
     </div>
     <div class="card-list">
 
-      <a href="https://lanone100.github.io/fromingpp/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/fromingpp/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🎞</div>
         <div class="card-body">
           <span class="card-num">NO.003</span>
           <div class="card-name">膠片計算工具</div>
           <span class="card-url">lanone100.github.io/fromingpp</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/filmall/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/filmall/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📊</div>
         <div class="card-body">
           <span class="card-num">NO.004</span>
           <div class="card-name">膠片剩餘量計算表</div>
           <span class="card-url">lanone100.github.io/filmall</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/reflake/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/reflake/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">♻️</div>
         <div class="card-body">
           <span class="card-num">NO.005</span>
           <div class="card-name">PP回收料比例計算器</div>
           <span class="card-url">lanone100.github.io/reflake</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/PPfeeding/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/PPfeeding/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">⬇️</div>
         <div class="card-body">
           <span class="card-num">NO.006</span>
           <div class="card-name">PP下料計算器</div>
           <span class="card-url">lanone100.github.io/PPfeeding</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
     </div>
-  </div>
+  </section>
 
-  <!-- S3：成型計算工具 -->
-  <div class="section s3" id="s3">
+  <!-- S3 成型計算工具 -->
+  <section class="section s3" id="s3">
     <div class="section-header">
       <div class="section-pill">⚙️ 成型計算工具</div>
       <div class="section-rule"></div>
@@ -583,61 +600,61 @@
     </div>
     <div class="card-list">
 
-      <a href="https://lanone100.github.io/sheetool/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/sheetool/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📏</div>
         <div class="card-body">
           <span class="card-num">NO.007</span>
           <div class="card-name">真空成型材料厚度計算器</div>
           <span class="card-url">lanone100.github.io/sheetool</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/formingwt/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/formingwt/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">⚖️</div>
         <div class="card-body">
           <span class="card-num">NO.008</span>
           <div class="card-name">真空成型品膠片換算器</div>
           <span class="card-url">lanone100.github.io/formingwt</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/formingkit/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/formingkit/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🏭</div>
         <div class="card-body">
           <span class="card-num">NO.009</span>
           <div class="card-name">成型品產能計算</div>
           <span class="card-url">lanone100.github.io/formingkit</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/moldingbox/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/moldingbox/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📐</div>
         <div class="card-body">
           <span class="card-num">NO.010</span>
           <div class="card-name">成型盒厚度與減重計算器</div>
           <span class="card-url">lanone100.github.io/moldingbox</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/moldarray/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/moldarray/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🔲</div>
         <div class="card-body">
           <span class="card-num">NO.011</span>
           <div class="card-name">成型模具陣列計算表</div>
           <span class="card-url">lanone100.github.io/moldarray</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
     </div>
-  </div>
+  </section>
 
-  <!-- S4：機械設備工具 -->
-  <div class="section s4" id="s4">
+  <!-- S4 機械設備工具 -->
+  <section class="section s4" id="s4">
     <div class="section-header">
       <div class="section-pill">🔧 機械設備工具</div>
       <div class="section-rule"></div>
@@ -645,30 +662,31 @@
     </div>
     <div class="card-list">
 
-      <a href="https://lanone100.github.io/screwtools/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/screwtools/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🔩</div>
         <div class="card-body">
           <span class="card-num">NO.012</span>
           <div class="card-name">螺絲規格與攻牙孔徑計算器</div>
           <span class="card-url">lanone100.github.io/screwtools</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
-      <a href="https://lanone100.github.io/tooltimes/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/tooltimes/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🛠️</div>
         <div class="card-body">
           <span class="card-num">NO.013</span>
           <div class="card-name">設備保養提醒工具</div>
           <span class="card-url">lanone100.github.io/tooltimes</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
     </div>
-  </div>
-  <!-- S5：線上實用工具 -->
-  <div class="section s5" id="s5">
+  </section>
+
+  <!-- S5 線上實用工具 -->
+  <section class="section s5" id="s5">
     <div class="section-header">
       <div class="section-pill">🌐 線上實用工具</div>
       <div class="section-rule"></div>
@@ -676,35 +694,35 @@
     </div>
     <div class="card-list">
 
-      <a href="https://lanone100.github.io/Translate/" target="_blank" class="card">
+      <a href="https://lanone100.github.io/Translate/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🎙️</div>
         <div class="card-body">
           <span class="card-num">NO.014</span>
           <div class="card-name">語音翻譯工作站</div>
           <span class="card-url">lanone100.github.io/Translate</span>
         </div>
-        <span class="card-arrow">›</span>
+        <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
     </div>
-  </div>
+  </section>
 
-</div><!-- /main -->
+</main>
 
-<!-- ── FOOTER ── -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-brand">線上計算工具</div>
   <p>Copyright © 2026 SHINPAK | Powered by SHINPAK</p>
 </footer>
 
 <script>
-  /* Tab 切換 active 狀態 */
-  const tabs = document.querySelectorAll('.cat-tab');
-  const sections = document.querySelectorAll('.section');
-  const navH = document.querySelector('.topbar').offsetHeight +
-               document.querySelector('.cat-nav').offsetHeight;
+(function () {
+  'use strict';
 
-  /* 點擊 tab → 更新 active */
+  const tabs     = Array.from(document.querySelectorAll('.cat-tab'));
+  const sections = Array.from(document.querySelectorAll('.section[id]'));
+
+  /* ── Tab 點擊 → 更新 active ── */
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
@@ -712,19 +730,49 @@
     });
   });
 
-  /* 捲動時自動更新 active tab */
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        tabs.forEach(t => {
-          t.classList.toggle('active', t.getAttribute('href') === '#' + id);
-        });
-      }
-    });
-  }, { rootMargin: `-${navH + 16}px 0px -60% 0px` });
+  /* ── 動態計算兩層 sticky 偏移 ── */
+  function getStickyOffset() {
+    const topbar = document.querySelector('.topbar');
+    const catNav = document.querySelector('.cat-nav');
+    return (topbar ? topbar.offsetHeight : 60) +
+           (catNav ? catNav.offsetHeight  : 46) +
+           16;
+  }
 
-  sections.forEach(s => observer.observe(s));
+  /* ── IntersectionObserver：捲動同步 active tab ── */
+  let observer;
+
+  function buildObserver() {
+    if (observer) observer.disconnect();
+    const offset = getStickyOffset();
+
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tabs.forEach(t => {
+            t.classList.toggle('active', t.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, {
+      rootMargin: `-${offset}px 0px -55% 0px`,
+      threshold: 0
+    });
+
+    sections.forEach(s => observer.observe(s));
+  }
+
+  buildObserver();
+
+  /* ── 視窗 resize 時重建 observer（sticky 高度可能變化）── */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(buildObserver, 200);
+  });
+
+})();
 </script>
 </body>
 </html>

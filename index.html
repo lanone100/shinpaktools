@@ -22,6 +22,8 @@
     --c3l:     #e3f9f0;
     --c4:      #9040f0;   /* 紫：機械 */
     --c4l:     #f2ebfe;
+    --c5:      #0891b2;   /* 青：實用工具 */
+    --c5l:     #e0f7fa;
     --text:    #111827;
     --sub:     #6b7a99;
     --border:  #dde4f2;
@@ -218,6 +220,7 @@
   .cat-tab.t2.active, .cat-tab.t2:hover { color: var(--c2); border-color: var(--c2); }
   .cat-tab.t3.active, .cat-tab.t3:hover { color: var(--c3); border-color: var(--c3); }
   .cat-tab.t4.active, .cat-tab.t4:hover { color: var(--c4); border-color: var(--c4); }
+  .cat-tab.t5.active, .cat-tab.t5:hover { color: var(--c5); border-color: var(--c5); }
 
   /* ────────────────────────────────────────────
      MAIN CONTENT
@@ -256,6 +259,7 @@
   .s2 .section-pill { background: var(--c2l); color: var(--c2); }
   .s3 .section-pill { background: var(--c3l); color: var(--c3); }
   .s4 .section-pill { background: var(--c4l); color: var(--c4); }
+  .s5 .section-pill { background: var(--c5l); color: var(--c5); }
 
   .section-rule { flex: 1; height: 1px; background: var(--border); }
 
@@ -304,6 +308,7 @@
   .s2 .card::before { background: var(--c2); }
   .s3 .card::before { background: var(--c3); }
   .s4 .card::before { background: var(--c4); }
+  .s5 .card::before { background: var(--c5); }
 
   /* 手機：tap active 回饋 */
   .card:active {
@@ -321,6 +326,7 @@
     .s2 .card:hover { box-shadow: 0 10px 28px rgba(240,90,40,0.14); }
     .s3 .card:hover { box-shadow: 0 10px 28px rgba(15,171,114,0.14); }
     .s4 .card:hover { box-shadow: 0 10px 28px rgba(144,64,240,0.14); }
+    .s5 .card:hover { box-shadow: 0 10px 28px rgba(8,145,178,0.14); }
     .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
   }
 
@@ -341,6 +347,7 @@
   .s2 .card-icon { background: var(--c2l); }
   .s3 .card-icon { background: var(--c3l); }
   .s4 .card-icon { background: var(--c4l); }
+  .s5 .card-icon { background: var(--c5l); }
 
   .card-body { flex: 1; min-width: 0; }
 
@@ -451,6 +458,7 @@
   .section:nth-child(2) { animation-delay: 0.12s; }
   .section:nth-child(3) { animation-delay: 0.19s; }
   .section:nth-child(4) { animation-delay: 0.26s; }
+  .section:nth-child(5) { animation-delay: 0.33s; }
 </style>
 </head>
 <body>
@@ -475,6 +483,7 @@
   <a class="cat-tab t2" href="#s2">🎞 膠片</a>
   <a class="cat-tab t3" href="#s3">⚙️ 成型</a>
   <a class="cat-tab t4" href="#s4">🔧 機械</a>
+  <a class="cat-tab t5" href="#s5">🌐 實用</a>
 </nav>
 
 <!-- ── MAIN ── -->
@@ -651,6 +660,27 @@
           <span class="card-num">NO.013</span>
           <div class="card-name">設備保養提醒工具</div>
           <span class="card-url">lanone100.github.io/tooltimes</span>
+        </div>
+        <span class="card-arrow">›</span>
+      </a>
+
+    </div>
+  </div>
+  <!-- S5：線上實用工具 -->
+  <div class="section s5" id="s5">
+    <div class="section-header">
+      <div class="section-pill">🌐 線上實用工具</div>
+      <div class="section-rule"></div>
+      <span class="section-count">01 項</span>
+    </div>
+    <div class="card-list">
+
+      <a href="https://lanone100.github.io/Translate/" target="_blank" class="card">
+        <div class="card-icon">🎙️</div>
+        <div class="card-body">
+          <span class="card-num">NO.014</span>
+          <div class="card-name">語音翻譯工作站</div>
+          <span class="card-url">lanone100.github.io/Translate</span>
         </div>
         <span class="card-arrow">›</span>
       </a>

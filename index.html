@@ -140,7 +140,7 @@ body {
   padding: clamp(32px, 7vw, 68px) clamp(20px, 6vw, 80px) clamp(36px, 7vw, 72px);
   text-align: center;
   overflow: hidden;
-  background: #f2f2f7;
+  background: #080e1a;
 }
 
 #hero-canvas {
@@ -152,6 +152,20 @@ body {
   z-index: 0;
 }
 
+/* 文字在深色背景上改亮色 */
+.hero-eyebrow { color: #4fc3f7 !important; }
+
+.hero h1 {
+  background: linear-gradient(135deg, #ffffff 0%, #e0f0ff 50%, #90caf9 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+.hero h1 .accent {
+  background: linear-gradient(135deg, #29b6f6 0%, #4dd0e1 50%, #80cbc4 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
 .hero-eyebrow {
   display: inline-block;
   font-size: clamp(11px, 2vw, 13px);
@@ -766,105 +780,180 @@ footer p {
 </footer>
 
 <script>
-/* ── Hero Canvas：彩色粒子波浪 ── */
+/* ── Hero Canvas：科技感格線 + 數據流 + 掃描光束 ── */
 (function () {
   const canvas = document.getElementById('hero-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const COLORS = [
-    [0,   122, 255],   // 藍
-    [175,  82, 222],   // 紫
-    [52,  199,  89],   // 綠
-    [255, 149,   0],   // 橘
-    [50,  173, 230],   // 青
-  ];
+  let W, H, animId, t = 0;
 
-  let W, H, particles, animId;
+  /* ── 數據流粒子 ── */
+  const STREAM_COLORS = ['#29b6f6','#4dd0e1','#80cbc4','#4fc3f7','#00e5ff','#b2ebf2'];
+  let streams = [];
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
 
   function resize() {
     const hero = canvas.parentElement;
     W = canvas.width  = hero.offsetWidth;
     H = canvas.height = hero.offsetHeight;
-    init();
+    initStreams();
   }
 
-  function rand(min, max) { return Math.random() * (max - min) + min; }
-
-  function init() {
-    const count = Math.min(Math.floor(W * H / 5000), 120);
-    particles = Array.from({ length: count }, (_, i) => {
-      const col = COLORS[i % COLORS.length];
-      return {
-        x:     rand(0, W),
-        y:     rand(0, H),
-        r:     rand(3, 8),
-        vx:    rand(-0.5, 0.5),
-        vy:    rand(-0.6, 0.6),
-        alpha: rand(0.18, 0.55),
-        col,
-        pulse: rand(0, Math.PI * 2),
-        pulseSpeed: rand(0.015, 0.04),
-      };
-    });
+  function initStreams() {
+    const cols = Math.ceil(W / 28);
+    streams = Array.from({ length: cols }, (_, i) => ({
+      x: i * 28 + rand(0, 28),
+      y: rand(-H, 0),
+      speed: rand(0.6, 2.2),
+      len: rand(40, 140),
+      color: STREAM_COLORS[Math.floor(rand(0, STREAM_COLORS.length))],
+      alpha: rand(0.15, 0.55),
+    }));
   }
 
-  function drawConnections() {
-    const maxDist = Math.min(W, H) * 0.2;
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < maxDist) {
-          const alpha = (1 - d / maxDist) * 0.18;
-          const ci = particles[i].col;
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(${ci[0]},${ci[1]},${ci[2]},${alpha})`;
-          ctx.lineWidth = 0.8;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
+  /* ── 十字光點 ── */
+  let nodes = [];
+  function initNodes() {
+    const cols = Math.ceil(W / 60);
+    const rows = Math.ceil(H / 60);
+    nodes = [];
+    for (let r = 0; r <= rows; r++) {
+      for (let c = 0; c <= cols; c++) {
+        if (Math.random() > 0.55) {
+          nodes.push({
+            x: c * 60 + rand(-8, 8),
+            y: r * 60 + rand(-8, 8),
+            pulse: rand(0, Math.PI * 2),
+            speed: rand(0.02, 0.05),
+            color: STREAM_COLORS[Math.floor(rand(0, STREAM_COLORS.length))],
+          });
         }
       }
     }
   }
 
+  function drawGrid() {
+    ctx.strokeStyle = 'rgba(41,182,246,0.07)';
+    ctx.lineWidth = 0.5;
+    const step = 60;
+    for (let x = 0; x < W; x += step) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += step) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+  }
+
+  function drawNodes() {
+    nodes.forEach(n => {
+      n.pulse += n.speed;
+      const a = 0.25 + Math.sin(n.pulse) * 0.2;
+      const r = 2 + Math.sin(n.pulse) * 1.2;
+      ctx.save();
+      ctx.globalAlpha = a;
+      ctx.fillStyle = n.color;
+      ctx.shadowColor = n.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fill();
+      /* 十字線 */
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = 0.6;
+      ctx.globalAlpha = a * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(n.x - 6, n.y); ctx.lineTo(n.x + 6, n.y);
+      ctx.moveTo(n.x, n.y - 6); ctx.lineTo(n.x, n.y + 6);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function drawStreams() {
+    streams.forEach(s => {
+      const grad = ctx.createLinearGradient(s.x, s.y, s.x, s.y + s.len);
+      grad.addColorStop(0, `rgba(0,0,0,0)`);
+      grad.addColorStop(0.6, s.color.replace(')', `,${s.alpha})`).replace('rgb(', 'rgba('));
+      grad.addColorStop(1, s.color.replace(')', `,${s.alpha})`).replace('rgb(', 'rgba('));
+
+      /* handle hex colors */
+      const hex = s.color;
+      const r = parseInt(hex.slice(1,3),16);
+      const g = parseInt(hex.slice(3,5),16);
+      const b = parseInt(hex.slice(5,7),16);
+
+      const g2 = ctx.createLinearGradient(s.x, s.y, s.x, s.y + s.len);
+      g2.addColorStop(0, `rgba(${r},${g},${b},0)`);
+      g2.addColorStop(0.7, `rgba(${r},${g},${b},${s.alpha * 0.5})`);
+      g2.addColorStop(1, `rgba(${r},${g},${b},${s.alpha})`);
+
+      ctx.save();
+      ctx.shadowColor = hex;
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = g2;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(s.x, s.y + s.len);
+      ctx.stroke();
+
+      /* bright head dot */
+      ctx.fillStyle = `rgba(${r},${g},${b},0.9)`;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y + s.len, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      s.y += s.speed;
+      if (s.y > H + 20) {
+        s.y = rand(-H * 0.5, 0);
+        s.speed = rand(0.6, 2.2);
+        s.alpha = rand(0.15, 0.55);
+        s.color = STREAM_COLORS[Math.floor(rand(0, STREAM_COLORS.length))];
+      }
+    });
+  }
+
+  /* ── 水平掃描光束 ── */
+  let scanY = -20;
+  function drawScan() {
+    const grad = ctx.createLinearGradient(0, scanY - 30, 0, scanY + 30);
+    grad.addColorStop(0, 'rgba(41,182,246,0)');
+    grad.addColorStop(0.5, 'rgba(41,182,246,0.06)');
+    grad.addColorStop(1, 'rgba(41,182,246,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, scanY - 30, W, 60);
+    /* thin bright line */
+    ctx.strokeStyle = 'rgba(41,182,246,0.25)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0, scanY); ctx.lineTo(W, scanY); ctx.stroke();
+    scanY += 1.2;
+    if (scanY > H + 30) scanY = -30;
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    drawConnections();
-    particles.forEach(p => {
-      p.pulse += p.pulseSpeed;
-      const r = p.r + Math.sin(p.pulse) * 2;
-      const a = p.alpha + Math.sin(p.pulse * 1.3) * 0.12;
-
-      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 2.5);
-      grd.addColorStop(0,   `rgba(${p.col[0]},${p.col[1]},${p.col[2]},${a})`);
-      grd.addColorStop(1,   `rgba(${p.col[0]},${p.col[1]},${p.col[2]},0)`);
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r * 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
-
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < -20)  p.x = W + 20;
-      if (p.x > W+20) p.x = -20;
-      if (p.y < -20)  p.y = H + 20;
-      if (p.y > H+20) p.y = -20;
-    });
+    drawGrid();
+    drawStreams();
+    drawNodes();
+    drawScan();
+    t++;
     animId = requestAnimationFrame(draw);
   }
 
   resize();
+  initNodes();
   draw();
 
   let rt2;
   window.addEventListener('resize', () => {
     cancelAnimationFrame(animId);
     clearTimeout(rt2);
-    rt2 = setTimeout(() => { resize(); draw(); }, 150);
+    rt2 = setTimeout(() => { resize(); initNodes(); draw(); }, 150);
   });
 })();
 </script>

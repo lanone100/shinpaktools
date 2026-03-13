@@ -133,8 +133,68 @@ body {
 .topbar-right:hover { opacity: .7; }
 
 /* ══════════════════════════════════════
-   HERO
+   DARK MODE
 ══════════════════════════════════════ */
+html.dark {
+  --bg:     #1c1c1e;
+  --bg2:    #2c2c2e;
+  --glass:  rgba(44,44,46,0.82);
+  --text:   #f2f2f7;
+  --text2:  #d1d1d6;
+  --sub:    #8e8e93;
+  --border: rgba(255,255,255,0.10);
+}
+
+html.dark .mesh-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 20%,  rgba(0,122,255,.08)  0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 10%,  rgba(175,82,222,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 75% 80%,  rgba(52,199,89,.06)  0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 85%,  rgba(255,149,0,.07)  0%, transparent 70%),
+    #1c1c1e;
+}
+
+html.dark .topbar {
+  background: rgba(28,28,30,0.88);
+}
+
+html.dark .cat-nav {
+  background: rgba(28,28,30,0.92);
+}
+
+html.dark footer {
+  background: rgba(28,28,30,0.92);
+}
+
+html.dark .card {
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 4px 16px rgba(0,0,0,.3);
+}
+
+html.dark .card::after {
+  background: linear-gradient(160deg, rgba(255,255,255,.06) 0%, transparent 60%);
+}
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: .5px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  transition: background .2s, transform .15s;
+  -webkit-user-select: none; user-select: none;
+}
+.theme-btn:active { transform: scale(.88); }
+@media (hover: hover) { .theme-btn:hover { background: rgba(0,122,255,.12); } }
+
+
 .hero {
   position: relative;
   padding: clamp(32px, 7vw, 68px) clamp(20px, 6vw, 80px) clamp(36px, 7vw, 72px);
@@ -525,6 +585,7 @@ footer p {
   <a class="topbar-brand" href="https://shinpak.com" target="_blank" rel="noopener">SHINPAK</a>
   <span class="topbar-sep">/</span>
   <a class="topbar-right" href="https://lanone100.github.io/shinpaktools/" target="_blank" rel="noopener">線上計算工具</a>
+  <button class="theme-btn" id="theme-btn" aria-label="切換深淺色模式">🌙</button>
 </div>
 
 <!-- HERO -->
@@ -552,7 +613,7 @@ footer p {
       <div class="section-icon">📦</div>
       <span class="section-title">貨櫃計算工具</span>
       <div class="section-rule"></div>
-      <span class="section-count">02 項</span>
+      <span class="section-count">03 項</span>
     </div>
     <div class="card-list">
 
@@ -576,6 +637,16 @@ footer p {
         <span class="card-arrow" aria-hidden="true">›</span>
       </a>
 
+      <a href="https://lanone100.github.io/cartontools/" target="_blank" rel="noopener" class="card">
+        <div class="card-icon">📫</div>
+        <div class="card-body">
+          <span class="card-num">No.003</span>
+          <div class="card-name">瓦楞紙箱計算器</div>
+          <span class="card-url">lanone100.github.io/cartontools</span>
+        </div>
+        <span class="card-arrow" aria-hidden="true">›</span>
+      </a>
+
     </div>
   </section>
 
@@ -592,7 +663,7 @@ footer p {
       <a href="https://lanone100.github.io/fromingpp/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🎞</div>
         <div class="card-body">
-          <span class="card-num">No.003</span>
+          <span class="card-num">No.004</span>
           <div class="card-name">膠片計算工具</div>
           <span class="card-url">lanone100.github.io/fromingpp</span>
         </div>
@@ -602,7 +673,7 @@ footer p {
       <a href="https://lanone100.github.io/filmall/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📊</div>
         <div class="card-body">
-          <span class="card-num">No.004</span>
+          <span class="card-num">No.005</span>
           <div class="card-name">膠片剩餘量計算表</div>
           <span class="card-url">lanone100.github.io/filmall</span>
         </div>
@@ -612,7 +683,7 @@ footer p {
       <a href="https://lanone100.github.io/reflake/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">♻️</div>
         <div class="card-body">
-          <span class="card-num">No.005</span>
+          <span class="card-num">No.006</span>
           <div class="card-name">PP回收料比例計算器</div>
           <span class="card-url">lanone100.github.io/reflake</span>
         </div>
@@ -622,7 +693,7 @@ footer p {
       <a href="https://lanone100.github.io/PPfeeding/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">⬇️</div>
         <div class="card-body">
-          <span class="card-num">No.006</span>
+          <span class="card-num">No.007</span>
           <div class="card-name">PP下料計算器</div>
           <span class="card-url">lanone100.github.io/PPfeeding</span>
         </div>
@@ -632,7 +703,7 @@ footer p {
     </div>
   </section>
 
-  <!-- S3 成型計算工具 (已移除「成型品膠片換算器」) -->
+  <!-- S3 成型計算工具 -->
   <section class="section s3" id="s3">
     <div class="section-header">
       <div class="section-icon">⚙️</div>
@@ -645,7 +716,7 @@ footer p {
       <a href="https://lanone100.github.io/sheetool/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📏</div>
         <div class="card-body">
-          <span class="card-num">No.007</span>
+          <span class="card-num">No.008</span>
           <div class="card-name">真空成型材料厚度計算器</div>
           <span class="card-url">lanone100.github.io/sheetool</span>
         </div>
@@ -655,7 +726,7 @@ footer p {
       <a href="https://lanone100.github.io/formingkit/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🏭</div>
         <div class="card-body">
-          <span class="card-num">No.008</span>
+          <span class="card-num">No.009</span>
           <div class="card-name">成型品產能計算</div>
           <span class="card-url">lanone100.github.io/formingkit</span>
         </div>
@@ -665,7 +736,7 @@ footer p {
       <a href="https://lanone100.github.io/moldingbox/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">📐</div>
         <div class="card-body">
-          <span class="card-num">No.009</span>
+          <span class="card-num">No.010</span>
           <div class="card-name">成型盒厚度與減重計算器</div>
           <span class="card-url">lanone100.github.io/moldingbox</span>
         </div>
@@ -675,7 +746,7 @@ footer p {
       <a href="https://lanone100.github.io/moldarray/" target="_blank" rel="noopener" class="card">
         <div class="card-icon">🔲</div>
         <div class="card-body">
-          <span class="card-num">No.010</span>
+          <span class="card-num">No.011</span>
           <div class="card-name">成型模具陣列計算表</div>
           <span class="card-url">lanone100.github.io/moldarray</span>
         </div>
@@ -770,7 +841,39 @@ footer p {
 </footer>
 
 <script>
-/* ── Hero Canvas：科技感格線 + 數據流 + 掃描光束 ── */
+/* ── Dark / Light mode toggle ── */
+(function () {
+  const btn = document.getElementById('theme-btn');
+  const html = document.documentElement;
+  const KEY = 'shinpak-theme';
+
+  function applyTheme(dark) {
+    if (dark) {
+      html.classList.add('dark');
+      btn.textContent = '☀️';
+      btn.setAttribute('aria-label', '切換淺色模式');
+    } else {
+      html.classList.remove('dark');
+      btn.textContent = '🌙';
+      btn.setAttribute('aria-label', '切換深色模式');
+    }
+  }
+
+  /* 讀取儲存偏好，否則跟隨系統 */
+  const saved = localStorage.getItem(KEY);
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved !== null ? saved === 'dark' : prefersDark);
+
+  btn.addEventListener('click', () => {
+    const isDark = html.classList.toggle('dark');
+    btn.textContent = isDark ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', isDark ? '切換淺色模式' : '切換深色模式');
+    localStorage.setItem(KEY, isDark ? 'dark' : 'light');
+  });
+})();
+</script>
+
+<script>
 (function () {
   const canvas = document.getElementById('hero-canvas');
   if (!canvas) return;

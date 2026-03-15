@@ -175,24 +175,72 @@ html.dark .card::after {
   background: linear-gradient(160deg, rgba(255,255,255,.06) 0%, transparent 60%);
 }
 
+
 /* ── THEME TOGGLE BUTTON ── */
+@keyframes rainbowSpin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .theme-btn {
   margin-left: auto;
   flex-shrink: 0;
+  position: relative;
   width: 36px; height: 36px;
   border-radius: 50%;
-  border: .5px solid var(--border);
-  background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  padding: 2px;                     /* 讓彩虹外圈透出 */
+  background: linear-gradient(135deg,
+    #ff6b6b, #ff9f43, #ffd32a,
+    #0be881, #00d2d3, #54a0ff,
+    #5f27cd, #ff6b6b);
+  background-size: 300% 300%;
+  animation: rainbowSpin 3s linear infinite;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 17px;
-  transition: background .2s, transform .15s;
+  transition: transform .15s, box-shadow .2s;
   -webkit-user-select: none; user-select: none;
+  box-shadow: 0 0 10px rgba(84,160,255,.35), 0 0 20px rgba(255,107,107,.2);
 }
+
+/* 內層圓形蓋住背景，露出彩虹邊框 */
+.theme-btn::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 0;
+  transition: background .2s;
+}
+
+.theme-btn svg {
+  position: relative;
+  z-index: 1;
+  stroke: var(--text);
+  transition: stroke .2s;
+}
+
 .theme-btn:active { transform: scale(.88); }
-@media (hover: hover) { .theme-btn:hover { background: rgba(0,122,255,.12); } }
+
+@media (hover: hover) {
+  .theme-btn:hover {
+    box-shadow: 0 0 16px rgba(84,160,255,.5), 0 0 28px rgba(255,107,107,.3);
+    transform: scale(1.08);
+  }
+}
+
+/* 深色模式：內圓白底，icon 黑色 */
+html.dark .theme-btn::before {
+  background: rgba(255,255,255,0.92);
+}
+html.dark .theme-btn svg {
+  stroke: #1c1c1e;
+}
 
 
 .hero {
@@ -585,7 +633,10 @@ footer p {
   <a class="topbar-brand" href="https://shinpak.com" target="_blank" rel="noopener">SHINPAK</a>
   <span class="topbar-sep">/</span>
   <a class="topbar-right" href="https://lanone100.github.io/shinpaktools/" target="_blank" rel="noopener">線上計算工具</a>
-  <button class="theme-btn" id="theme-btn" aria-label="切換深淺色模式">🌙</button>
+  <button class="theme-btn" id="theme-btn" aria-label="切換深淺色模式">
+    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
 </div>
 
 <!-- HERO -->
@@ -848,13 +899,17 @@ footer p {
   const KEY = 'shinpak-theme';
 
   function applyTheme(dark) {
+    const moon = document.getElementById('icon-moon');
+    const sun  = document.getElementById('icon-sun');
     if (dark) {
       html.classList.add('dark');
-      btn.textContent = '☀️';
+      if (moon) moon.style.display = 'none';
+      if (sun)  sun.style.display  = '';
       btn.setAttribute('aria-label', '切換淺色模式');
     } else {
       html.classList.remove('dark');
-      btn.textContent = '🌙';
+      if (moon) moon.style.display = '';
+      if (sun)  sun.style.display  = 'none';
       btn.setAttribute('aria-label', '切換深色模式');
     }
   }
@@ -866,8 +921,17 @@ footer p {
 
   btn.addEventListener('click', () => {
     const isDark = html.classList.toggle('dark');
-    btn.textContent = isDark ? '☀️' : '🌙';
-    btn.setAttribute('aria-label', isDark ? '切換淺色模式' : '切換深色模式');
+    const moon = document.getElementById('icon-moon');
+    const sun  = document.getElementById('icon-sun');
+    if (isDark) {
+      if (moon) moon.style.display = 'none';
+      if (sun)  sun.style.display  = '';
+      btn.setAttribute('aria-label', '切換淺色模式');
+    } else {
+      if (moon) moon.style.display = '';
+      if (sun)  sun.style.display  = 'none';
+      btn.setAttribute('aria-label', '切換深色模式');
+    }
     localStorage.setItem(KEY, isDark ? 'dark' : 'light');
   });
 })();
